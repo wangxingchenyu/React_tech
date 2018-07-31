@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import './index.less'
+import '../index.less'
 
 let source = [];
 
@@ -56,19 +56,25 @@ class Swiper extends Component {
 
     //边界判断
     componentWillUpdate(nextProps, nextState) {
-        let {step, speed} = nextState
+        let {step, speed} = nextState;
         if (step > this.cloneDate.length - 1) {
-            this.setState({step: 1, speed: 0})
-            setTimeout(() => {
-                this.setState({step: this.state.step + 1, speed: this.props.speed})
-            }, 0)
+            this.setState({
+                step: 1,
+                speed: 0
+            })
         }
+        if (step < 1) {
+            this.setState({step: this.cloneDate.length - 1, speed: 0});
+        }
+    }
 
-        if (step <1) {
-            this.setState({step: this.cloneDate.length - 1,speed:0});
-            setTimeout(() => {
-                this.setState({step: this.state.step - 1, speed: this.props.speed})
-            }, 0)
+    componentDidUpdate(nextProps, nextState) {
+        let {step, speed} = this.state;
+        if (step === 1 && speed === 0) {
+            this.setState({
+                step: step + 1,
+                speed: this.props.speed
+            })
         }
     }
 
