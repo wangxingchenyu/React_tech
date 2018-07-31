@@ -56,23 +56,53 @@ class Swiper extends Component {
 
     //边界判断
     componentWillUpdate(nextProps, nextState) {
-        let {step} = nextState
+        let {step, speed} = nextState;
+        // 右边界处理
         if (step > this.cloneDate.length - 1) {
-            this.setState({step: 1, speed: 0})
-            setTimeout(() => {
-                this.setState({step: this.state.step + 1, speed: this.props.speed})
-            }, 0)
+            this.setState({
+                step: 1,
+                speed: 0
+            })
         }
 
-        if (step < 1) {
-            this.setState({step: this.cloneDate.length - 1, speed: 0});
-            setTimeout(() => {
-                this.setState({step: this.state.step - 1, speed: this.props.speed})
-            }, 0)
+        //左边界处理
+        if (step < 0) {
+            this.setState({
+                step: this.cloneDate.length - 2,
+                speed: 0
+            })
+        }
+
+    }
+
+    componentDidUpdate(nextProps, nextState) {
+        let {step, speed} = this.state;
+        // 修改完成后，右边界处理
+        if (step === 1 && speed === 0) {
+            let delayTimer = setTimeout(() => {
+                clearTimeout(delayTimer);
+                this.setState({
+                    step: step + 1,
+                    speed: this.props.speed
+                })
+            })
+        }
+
+        //修改完成后，左边界处理
+        if (step === this.cloneDate.length - 2 && speed === 0) {
+            let {step, speed} = this.state;
+            let delayTimer = setTimeout(() => {
+                clearTimeout(delayTimer);
+                this.setState({
+                    step: step - 1,
+                    speed: this.props.speed
+                })
+            })
         }
     }
 
     render() {
+        console.log("渲染")
         let {cloneDate} = this
         let {step, speed} = this.state
         let style = {
@@ -142,9 +172,4 @@ class Swiper extends Component {
  * speed 定义图片切换动画时间
  */
 
-ReactDOM.render(<div>
-    <Swiper sourceDate={source} interval={3000} step={1} speed={300}/>
-    <Swiper sourceDate={source} interval={4000} step={2} speed={400}/>
-    <Swiper sourceDate={source} interval={5000} step={3} speed={500}/>
-</div>, root);
-
+ReactDOM.render(<div><Swiper sourceDate={source} interval={3000} step={1} speed={300}/></div>, root);
