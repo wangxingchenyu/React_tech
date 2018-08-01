@@ -46,12 +46,12 @@ class Title extends React.Component {
     render() {
         return (
             <Consumer>
-                {context => (
-                    <h1 style={{background: context.background, color: context.color}}>
-                        {this.props.children}
-                    </h1>
-                )}
-            </Consumer>
+            {context => (
+            <h1 style={{background: context.background, color: context.color}}>
+                {this.props.children}
+            </h1>
+        )}
+    </Consumer>
         );
     }
 }
