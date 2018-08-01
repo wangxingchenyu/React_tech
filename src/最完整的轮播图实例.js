@@ -109,11 +109,15 @@ class Swiper extends Component {
             width: 1000 * cloneDate.length,
             left: -1000 * step + "px",
             transition: `left ${speed}ms linear 0ms`
-        }  //定义ul的宽度
+        }
+        //定义ul的宽度
         let {sourceDate} = this.props
         return (
             <div className='container' onMouseEnter={this.hover} onMouseLeave={this.leave}>
-                <ul style={style}>
+                <ul style={style} onTransitionEnd={(e) => {
+                    //如果动画完成后
+                    this.isRun = false;
+                }}>
                     {
                         cloneDate.map((item, index) => (
                             <li key={index}><img src={item} width='100%' alt={index} height='100%'/></li>
@@ -157,6 +161,8 @@ class Swiper extends Component {
     }
 
     arrowLeft = (e) => {
+        if (this.isRUN) true;
+        this.isRun = true;
         this.setState({step: this.state.step - 1});
     }
 
