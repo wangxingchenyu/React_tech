@@ -317,7 +317,7 @@ getChildContext() {
 -  createContext里面传一个对象，用来提供上下文的数据 ，这个数据是默认的数据 如果生产者(Provider) 里面提供了，则不找Default上下文件的数据
 -  子组件如果想调用的话，不需要像以前一样声明类型，直接用 Customer 组件包括就可以了 里面返回是一个函数，参数是context
 > 如下:
-```angular2html
+```
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -410,6 +410,94 @@ async function two() {
 
 two();
 ```
+### 手动实现Redux
+- 声明一个store用来存储,返回一个自执行的函数，该函数返回的是一个对象，对象里面再执行相关的操作
+- 1)声明一个原数据对象 obj 2)声明一个事件方法的数组 3)subscribe用来将新的事情放到事件数组里面
+- getState() 用来返回最终的数据 
+- dispatch , getState, subscribe
+- dispatch({}) 参数传递过来一个对象,里面有type的key 用来判断是哪个操作执行的
+
+```
+let store = (function niming() {
+    let obj = {n: 0, m: 0};
+    let eventListenArr = [];
+
+    function dispatch(action) {
+        switch (action.type) {
+            case "VOTE_SUPPORT":
+                obj = {...obj, n: obj.n + 1};
+                break;
+            case "VOTE_AGINST":
+                obj = {...obj, m: obj.m + 1};
+                break
+        }
+        eventListenArr.forEach(item => {
+            if (typeof item === 'function') {
+                item();
+            }
+        })
+    }
+
+    function getState() {
+        return obj;
+    }
+
+    function subscribe(fn) {
+        //如果事件监听数组里面不包含提交的事情，则加入进去
+        if (!eventListenArr.includes(fn)) {
+            eventListenArr.push(fn);
+        }
+    }
+
+    return {
+        getState,
+        subscribe,
+        dispatch,
+    }
+})();
+```
+### 事件操作(dispatch)
+```
+render() {
+        return (
+            <div className='card-footer'>
+                <button className='btn btn-success' onClick={(e) => {
+                    console.log("执行支持");
+                    this.props.store.dispatch({
+                        type: "VOTE_SUPPORT"
+                    })
+                }}>支持
+                </button>
+                &nbsp;
+                &nbsp;
+                <button className='btn btn-danger' onClick={(e) => {
+                    console.log("执行反对");
+                    this.props.store.dispatch({
+                        type: "VOTE_AGINST"
+                    });
+                }}>反对
+                </button>
+            </div>
+        )
+    }
+```
+
+### 数据获取与订阅与重新render
+```
+render() {
+        console.log("执行了渲染");
+        let {n = 0, m = 0} = this.props.store.getState(), rate = n / (n + m) * 100;
+        isNaN(rate) ? rate = 0 : null;
+        console.log(n, m);
+        return (
+            <div className='card-body'>
+                <div className='alert alert-success'>支持:{n}</div>
+                <div className='alert alert-danger'>反对:{m}</div>
+                <div className='alert alert-dark'>支持率:{rate.toFixed(2) + "%"}</div>
+            </div>
+        )
+    }
+```
 
 ## redux流程
 - 安装  yarn add redux react-redux
@@ -469,7 +557,7 @@ let store = createStore(reducer);
     }
 ```
 
-### 行为dispatch
+### 执行dispatch
 
 ```
   <div className='card-footer'>
