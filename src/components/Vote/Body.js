@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 
 export default class Body extends Component {
 
-
     constructor(props, context) {
         super(props);
         this.state = {refresh: false}
@@ -11,17 +10,15 @@ export default class Body extends Component {
 
     //渲染完成后，执行did然后再随便定义一个setState,为了就是再次触发render
     componentDidMount() {
-        this.props.myRedux.subscribe(() => {
+        this.props.store.subscribe(() => {
+            console.log("执行了Did");
             this.setState({refresh: !this.state.refresh});  //this.setState()会自动触发render
         })
     }
 
-    /*
-    *改变后，自动执行aaa
-    */
-
     render() {
-        let {n = 0, m = 0} = this.props.myRedux.getState(), rate = n / (n + m)*100;
+        console.log("执行了渲染");
+        let {n = 0, m = 0} = this.props.store.getState(), rate = n / (n + m) * 100;
         isNaN(rate) ? rate = 0 : null;
         console.log(n, m);
         return (

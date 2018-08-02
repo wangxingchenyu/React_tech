@@ -2,35 +2,38 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Vote from "../components/Vote/Vote";
 import 'bootstrap/dist/css/bootstrap.css'
-let myRedux = (function anonymous() {
-    let oriObj = {};
-    let listenArray = [];
+import {createStore} from "redux"
 
-    function updateState(callback) {
-        let newObj = callback(oriObj);
-        oriObj = {...oriObj, ...newObj};
-        listenArray.forEach(item => {
-            if (typeof item === 'function') {
-                item();
-            }
-        })
+//赋一个默认的State值 ，后面传一个Action，里面传一个对象，对象里面有一个type属性
+let reducer = (state = {n: 0, m: 0}, action) => {
+    switch (action.type) {
+        case "VOTE_SUPPORT":
+            console.log('support');
+            state = {...state, n: state.n + 1};
+            console.log(state);
+            break;
+        case 'VOTE_AGINST':
+            console.log("againgst");
+            state = {...state, m: state.m + 1};
+            console.log(state);
+            break;
     }
 
-    function getState() {
-        return oriObj
-    }
+    //必须反回一个新的state来覆盖原来的state
+    return state;
+};
 
-    function subscribe(fn) {
-        listenArray.push(fn);
-    }
+let store = createStore(reducer);
 
-    return {
-        updateState,
-        getState,
-        subscribe
-    }
-})();
+/**
+ *   store 返回
+ *   createStore,
+ *   combineReducers,
+ *   bindActionCreators,
+ *   applyMiddleware,
+ *
+ *
+ */
 
+ReactDOM.render(<div><Vote title='给定的标题' store={store}/></div>, root);
 
-ReactDOM.render(
-    <div><Vote title='给定的标题' myRedux={myRedux}/></div>, document.getElementById('root'));

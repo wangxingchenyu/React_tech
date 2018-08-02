@@ -4,6 +4,7 @@ import Body from "./Body";
 import Footer from "./Footer";
 import PropTypes from 'prop-types'
 
+
 export default class Vote extends Component {
     constructor(props, context) {
         super(props, context);
@@ -15,18 +16,18 @@ export default class Vote extends Component {
             n: 0,
             m: 0
         },
-        myRedux:{}
+        myRedux: {}
     };
 
     render() {
         return (
-            <div className='container' style={{marginBottom:"10px"}}>
+            <div className='container' style={{marginBottom: "10px"}}>
                 <div className='row'>
                     <div className='col-md-12'>
                         <div className='card bg-light text-dark'>
                             <Header title={this.props.title}/>
-                            <Body myRedux={this.props.myRedux}/>
-                            <Footer myRedux={this.props.myRedux}/>
+                            <Body store={this.props.store}/>
+                            <Footer store={this.props.store}/>
                         </div>
                     </div>
                 </div>
