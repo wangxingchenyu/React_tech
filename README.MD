@@ -383,7 +383,7 @@ ReactDOM.render(
 
 ```
 ## Promise实例
-```angular2html
+```
 async function  one() {
     return  "hello world";
 }
@@ -393,7 +393,7 @@ console.log(one());
 
 ```
 - 实例二
-```angular2html
+```
 async function one() {
     return new Promise((resolve,reject)=>{
         setTimeout(()=>{
@@ -410,6 +410,89 @@ async function two() {
 
 two();
 ```
+
+## redux流程
+- 安装  yarn add redux react-redux
+> 声明: 
+> - redux要执行状态管理，不是随意的更改，需要有一个Reducer作为管理员来看有哪些action可以执行，如果判断出来了，则可以正常的执行
+> - 状态存储在createStore里面,里面放一个Reducer 它是一个函数，正常有两个参数，第一个是状态，第二个是动作，他是一个对象，在动作执行dispatch()的时候要送一个对象，里面有type属性用来标记动作名称
+> - 动作是dispatch()里面传一个对象{type:"""}
+> - 订阅sbuscripe(),里面是一个回调函数，用来改列setState，更改的内容无关，重要是通过this.setState()再次触发render渲染
+> - 这个订阅的函数会加到redux 监听对象数组里，在createStore里面的状态更改后，会立即解决订阅函数，再次执行render
+
+### 声明
+```
+import {createStore} from "redux"
+
+//赋一个默认的State值 ，后面传一个Action，里面传一个对象，对象里面有一个type属性
+let reducer = (state = {n: 0, m: 0}, action) => {
+    switch (action.type) {
+        case "VOTE_SUPPORT":
+            console.log('support');
+            state = {...state, n: state.n + 1};
+            console.log(state);
+            break;
+        case 'VOTE_AGINST':
+            console.log("againgst");
+            state = {...state, m: state.m + 1};
+            console.log(state);
+            break;
+    }
+
+    //必须反回一个新的state来覆盖原来的state
+    return state;
+};
+
+let store = createStore(reducer);
+```
+
+
+### 执行获取内容，并且发布订阅
+```react
+  console.log("执行了渲染");
+         let {n = 0, m = 0} = this.props.store.getState(), rate = n / (n + m) * 100;
+         isNaN(rate) ? rate = 0 : null;
+         console.log(n, m);
+         return (
+             <div className='card-body'>
+                 <div className='alert alert-success'>支持:{n}</div>
+                 <div className='alert alert-danger'>反对:{m}</div>
+                 <div className='alert alert-dark'>支持率:{rate.toFixed(2) + "%"}</div>
+             </div>
+         )
+     } 
+  componentDidMount() {
+        this.props.store.subscribe(() => {
+            console.log("执行了Did");
+            this.setState({refresh: !this.state.refresh});  //this.setState()会自动触发render
+        })
+    }
+```
+
+### 行为dispatch
+
+```
+  <div className='card-footer'>
+                <button className='btn btn-success' onClick={(e) => {
+                    console.log("执行支持");
+                    this.props.store.dispatch({
+                        type: "VOTE_SUPPORT"
+                    })
+                }}>支持
+                </button>
+                &nbsp;
+                &nbsp;
+                <button className='btn btn-danger' onClick={(e) => {
+                    console.log("执行反对");
+                    this.props.store.dispatch({
+                        type: "VOTE_AGINST"
+                    });
+                }}>反对
+                </button>
+            </div>
+```
+ 
+ 
 
 
 
