@@ -579,8 +579,156 @@ let store = createStore(reducer);
                 </button>
             </div>
 ```
- 
- 
 
+## Redux工程化结构 
+- 通常情况下，会在 src 目录时面建立 一个 store 目录
+- store 里面有actions reducer index.js action-types.js
+- index.js 返回一个store
+```
+store
+|- action
+|  | -vote.js
+|  | -personal.js
+|  | - index.js
+|- reducer
+|  | -vote.js
+|  | -personal.js
+|  | - index.js
+|- index.js
+|- action-type.js
+```
+> index.js
+```
+import {createStore} from "redux"
+import reducer from "./reducer/index"
 
+/**
+ * 将reducer拆分到reducer目录里面
+ */
+let store = createStore(reducer);
+export default store;
+```
+
+> action-types
+```
+/**
+ * 设票组件
+ * @type {string}
+ */
+export const VOTE_SUPPORT = 'VOTE_SUPPORT';
+export const VOTE_AGINST = 'VOTE_AGINST';
+
+/**
+ * 个人中心
+ */
+
+export const PERSONAL = 'PERSONAL'
+```
+> reducer
+ >> reduder 下面的vote.js
+```
+    import * as TYPES from "../action-types"
+    
+    export default function vote(state = {n: 0, m: 0}, action) {
+        switch (action.type) {
+            case TYPES.VOTE_SUPPORT:
+                console.log(111);
+                state = {...state, n: state.n + 1};
+                break;
+            case TYPES.VOTE_AGINST:
+                console.log(22);
+                state = {...state, m: state.m + 1};
+                break;
+        }
+        console.log(state);
+        return state;
+    }
+```
+
+ > reducer
+  >> reduder 下面的personal.js
+```
+import * as TYPES from "../action-types"
+
+export default function personal(state = {
+    personalInfo: {}
+}, action) {
+    return state;
+}
+
+```
+> Reducer index.js
+```
+import {combineReducers} from "redux"  合并两个reducer
+import personal from "./personal"
+import vote from "./Vote"
+
+let reducer = combineReducers({
+    personal,
+    vote
+});
+
+export default reducer;
+
+```
+> action
+   > action 下面的 vote
+```
+import * as TYPES from "../action-types"
+
+let vote={
+   support(){
+       return{type:TYPES.VOTE_SUPPORT}
+   } ,
+    against(){
+       return {type:TYPES.VOTE_AGINST}
+    }
+};
+
+export default vote;
+```
+
+> action
+   > action 下面的 personal
+```
+import * as TYPES from "../action-types"
+
+let personal ={};
+
+export default personal;
+```
+   
+> action
+   > action 下面的 index
+```
+import vote from "./voteAction"
+import personal from "./personalAction"
+
+let actions = {vote, personal};
+
+export default actions;
+```   
+
+> ps 在调取数据的时候，this.props.store.getState()返回的一对象，因为我们reduce合并了两个vote,person
+> 所以在调用的时候是 再找下面 this.props.store.getState().vote
+> 在dispatch()的时候，首先引入 import action from "../../store/action/index"
+```
+ render() {
+        return (
+            <div className='card-footer'>
+                <button className='btn btn-success' onClick={(e) => {
+                    console.log("执行支持");
+                    this.props.store.dispatch(action.vote.support());
+                }}>支持
+                </button>
+                &nbsp;
+                &nbsp;
+                <button className='btn btn-danger' onClick={(e) => {
+                    console.log("执行反对");
+                    this.props.store.dispatch(action.vote.against());
+                }}>反对
+                </button>
+            </div>
+        )
+```
 
