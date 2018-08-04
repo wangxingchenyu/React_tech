@@ -25,9 +25,8 @@ export default class Vote extends Component {
                 <div className='row'>
                     <div className='col-md-12'>
                         <div className='card bg-light text-dark'>
-                            <Header title={this.props.title}/>
-                            <Body store={this.props.store}/>
-                            <Footer store={this.props.store}/>
+                            <Body/>
+                            <Footer/>
                         </div>
                     </div>
                 </div>
