@@ -732,9 +732,145 @@ export default actions;
         )
 ```
 
-### redux复习
-- 什么是redux
-- 适用场景(共享数据的多个组件间共享数据的时候)，都是可以基于redux解决
-- createStore(reducer)
+###  React-redux
+- store目录时面的内容保持不变 
+- 提供两个组件，Provider connect (高阶组件)
+- Provider 只能包含一个根组件
+- 不需要在组件中再用Subscribe无需订阅
+
+> index.js
+```
+import store from "../store/index"
+import {Provider} from "react-redux"
+
+ReactDOM.render(
+    <div>
+        <Provider store={store}>
+            <Vote/>
+        </Provider>
+    </div>,
+    root);
+```
+
+> vote body.js
+```
+    import React, {Component} from 'react'
+    import PropTypes from 'prop-types'
+    import action from '../../store/action'
+    import {connect} from "react-redux"
+    
+    class Body extends Component {
+    
+        constructor(props, context) {
+            super(props);
+            console.log(props)
+        }
+    
+        componentWillMount() {
+            this.props.init({
+                n: 10,
+                m: 100,
+                title: "中国队vs日本队"
+            })
+            console.log("组件将要渲染");
+        }
+    
+        render() {
+            let {n, m} = this.props, rate = n / (n + m) * 100;
+            console.log(this.props,'渲染里面');
+            isNaN(rate) ? rate = 0 : null;
+            return (
+                <div className='card-body'>
+                    <div className='alert alert-success'>支持:{n}</div>
+                    <div className='alert alert-danger'>反对:{m}</div>
+                    <div className='alert alert-dark'>支持率:{rate.toFixed(2)+"%"}</div>
+                </div>
+            )
+        }
+    }
+    
+    let mapStateToProps = (state) => {
+        //反回什么，就在组件里面props里面放什么，反加一个对象 普通的数据，并不是一个函数
+        return {
+            ...state.vote
+        }
+    }
+    
+    let mapDispatchToProps = (dispatch) => {
+        //反回什么，就在组件里面props里面放什么，反加一个对象,追加到this.props里面,但是却是一个函数
+        return {
+            init(obj) {
+                dispatch(action.vote.init(obj));
+            }
+        }
+    }
+    
+    export default connect(mapStateToProps, mapDispatchToProps)(Body)
+```
+> footer里面的提交
+```
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+import * as TYPES from "../../store/action-types"
+import action from "../../store/action/index"
+import {connect} from "react-redux"
+
+class Footer extends Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        let {support,against} = this.props;
+        return (
+            <div className='card-footer'>
+                <button className='btn btn-success' onClick={support}>支持
+                </button>
+                &nbsp;
+                &nbsp;
+                <button className='btn btn-danger' onClick={against}>反对
+                </button>
+            </div>
+        )
+    }
+}
+
+// let mapStateToProps = (state) => {
+//     return {
+//         ...state.vote
+//     }
+// };
+//
+// let mapDispatchToProps = (dispatch) => {
+//     return {
+//         zhichi() {
+//             dispatch(action.vote.support());
+//         },
+//         fandui() {
+//             dispatch(action.vote.against());
+//         }
+//     }
+// };
+
+// export default connect(mapStateToProps, mapDispatchToProps)(Footer)
+export default connect(state => ({...state.vote}), action.vote)(Footer)
+
+
+```
+>> 说明: 上面的我们可以用在connect里面传入两个回调函数，分别是mapStateToProps
+>> mapDispatchToProps 
+> 分别是mapStateToProps 一个参数是state 是redux状态里面所有的数据，该函数返回什么就在this.props里面加入什么,如{...state.vote},意思是将vote里面的状态提取出来给props
+> mapDispatchToProps  一个参数是dispatch 里面也是返回一个json对象，自定义一个函数，里面执行dispatch操作如dispatch(action.vote.support)
+> 默认导出的并不是组件，而是connect 处理后的结果
+> 如果上面操作觉得太难的话，可以直接在connect()里面操作如下
+``` 
+//第一state直接返回一个对象里面存储vote里面状态的值 ，action.vote里面也存一个对象来存actions内容
+export default connect(state=>({...state.vote},action.vote))
+```
+- 如果第二个参数是一个函数，则返回一个对象，里面自定义函数来执行dispatch
+- 如果第二个参数是一个对象的话，则会自动的遍历 并自动的执行dispatch操作
+
+
+
 
 
