@@ -732,3 +732,9 @@ export default actions;
         )
 ```
 
+### redux复习
+- 什么是redux
+- 适用场景(共享数据的多个组件间共享数据的时候)，都是可以基于redux解决
+- createStore(reducer)
+
+

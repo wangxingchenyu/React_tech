@@ -4,7 +4,7 @@
  */
 export const VOTE_SUPPORT = 'VOTE_SUPPORT';
 export const VOTE_AGINST = 'VOTE_AGINST';
-
+export const VOTE_INIT = "VOTE_INIT";
 /**
  * 个人中心
  */
