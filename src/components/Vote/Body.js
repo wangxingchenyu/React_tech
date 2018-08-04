@@ -25,7 +25,7 @@ export default class Body extends Component {
         this.props.store.subscribe(() => {
             console.log("执行了Did");
             this.setState({...this.props.store.getState().vote})
-            // this.setState({refresh: !this.state.refresh});  //this.setState()会自动触发render
+            //在完成的时候，
         })
     }
 
