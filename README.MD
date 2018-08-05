@@ -302,7 +302,95 @@ getChildContext() {
         m: PropTypes.number
     };
 ```
+## 弹框实例
 
+```
+> 父组件
+import React, {Component} from 'react'
+import ReactDOM, {render} from 'react-dom'
+import Dialog from "./components/Dialog";
+
+class Parent extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {display: "none"}
+    }
+
+    render() {
+        return (
+            <div>
+                <button onClick={this.tan}>弹出</button>
+                <Dialog display={this.state.display} hide={this.hide}/>
+            </div>
+        )
+    }
+
+    tan = () => {
+        this.setState({display: "block"});
+    }
+
+    hide = () => {
+        this.setState({display: "none"});
+    }
+}
+
+
+ReactDOM.render(<div><Parent/></div>, root);
+
+
+/*
+  两个组件间的数据传递，通过props来修改
+
+  第一步将父组件的state 传给子组件的一个属性，
+
+  第二步：子组件接收这个属性来更改样式是否显示还是隐藏
+
+  第三步： 在子组件里面，产生一个事件，而这个事件指向是这个组件的属性，而这个组件的属性指向是父组件方法，
+
+  第四步：父组件这个方法通过改变状态来更改子组件里面的diaplay里面的值 ，从而达到父传子，子拿父的方法来更改状态
+  
+ */
+ 
+ > 子组件 
+ 
+ import React,{Component}  from 'react'
+ import '../dialog.less'
+ export default class Dialog extends Component{
+    constructor(){
+        super();
+    }
+    render(){
+        return (
+            <div className='mask' style={{display:this.props.display}}>
+                <div className='content'>
+                    <button  onClick={this.props.hide}> &times; </button>
+                </div>
+            </div>
+        )
+    }
+ }
+ 
+ > 样式
+ .mask{
+   width: 100%;
+   height: 100%;
+   position: fixed;
+   left: 0;
+   top: 0;
+   background: #000;
+   opacity: .4;
+   .content{
+     position: fixed;
+     width: 300px;
+     left: 50%;
+     top: 50%;
+     height: 300px;
+     background: #fff;
+     transform: translate(-50%,-50%);
+   }
+ }
+
+```
 
 ## 传递的两种试
 - props
@@ -869,6 +957,104 @@ export default connect(state=>({...state.vote},action.vote))
 ```
 - 如果第二个参数是一个函数，则返回一个对象，里面自定义函数来执行dispatch
 - 如果第二个参数是一个对象的话，则会自动的遍历 并自动的执行dispatch操作
+
+## createStore原理
+```
+let createStore = (reducer) => {
+    let state, listenArr = [];
+
+    //封装dispatch，并主动执行一次
+    function dispatch(action) {
+        /*
+         * 1)执行更新,当执行dispatch的时候才符触发reducer
+         * 2) 将原来的reducer返回的结果覆盖现在的State
+         */
+
+        state = reducer(state, action);
+        //并执行监听函数
+        for (let i = 0; i <= listenArr.length; i++) {
+            let item = listenArr[i];
+            if (typeof item === "function") { //判断如果是一个函数，则让其执行
+                item();
+            } else {
+                //如果不是函数，则给删除，但是为了不影响整体长度，需要对i进行--操作
+                listenArr.splice(i, 1);
+                i--;
+            }
+        }
+    }
+
+    dispatch({type: "_INIT_DEFAULT_STATE"});
+
+    //获取容器里面的state数据
+    function getState() {
+        // 操作目的是重新封装成新的对象，让里面的对象，只能通过dispatch更改(堆内存的地址)
+        let newState = JSON.parse(JSON.stringify(state));
+        return newState;
+    }
+
+    function subscribe(fn) {
+        !listenArr.includes(fn) ? listenArr.push(fn) : null;
+        //其返回的结果是将这个订阅的函数给从listenArr里面去掉
+        return function unsubscribe() {
+            /**
+             * 两种办法:一个是用Filter
+             * 一个是用: splice
+             */
+            let index = listenArr.indexOf(fn);
+
+            //从这个索引开始，删除一个
+            listenArr.splice(index, 1);
+
+            /**
+             * @param  有可能导致数组的坍塌问题，做如下操作
+             */
+
+            //并给这个位置给一个占位，如果是null的话，在dispatch里面执行函数的时候进行判断 ，如果是函数，则执行，如果不是函数，则删除，并让i--
+            listenArr[index] = null;
+
+        }
+    }
+
+    return {
+        getState,
+        dispatch,
+        subscribe
+    }
+}
+
+let reducer = (state = {}, action) => {
+    let {type} = action;
+    switch (type) {
+        /*根据dispatch分发过来的内容不同，进行不同的操作*/
+    }
+    return state;
+}
+
+//在创建createStore的时候，会将reducer传入进去，并且只有当执行Dispatch的时候，才会调用Reducer
+createStore(reducer())
+
+function combineReducers(reducers) {
+    return function reducer(originState = {}, action) {
+        let newState = {};
+        for (key in reducers) {
+            //如果不是自己的属性方法或者属性则终止
+            if (!reducers.hasOwnProperty()) reteurn;
+            newState[key] = reducers[key](originState[key], action)
+        }
+        return newState;
+    }
+}
+
+let store = createStore(reducer);
+store.dispatch({type: "add"});
+let unscribe = store.subscribe();
+
+
+```
+
+
+
 
 
 
