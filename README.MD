@@ -168,7 +168,19 @@
  - 配置协议  set HTTPS=true&yarn start ps: true与&中间不能有空格
  - 配置端口
  - 配置域名
- 
+> 脚手架里面配置less
+```
+	如果想在react脚手架里面引入less 除了配置less less-loader以外
+      
+   -  还要给javascriptEnabled:true
+   
+   - {
+                    loader: require.resolve('less-loader'),
+                    options: { javascriptEnabled: true }
+     },
+     
+     
+``` 
 ## 百度搜索框实例:
 -  安装jsonp,并封装成promise
 - 
@@ -1050,7 +1062,105 @@ let store = createStore(reducer);
 store.dispatch({type: "add"});
 let unscribe = store.subscribe();
 
+```
 
+# react-redux 原理之provider
+```
+重新定义一个react-redux.js文件
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+
+export default class Provider extends Component {
+    constructor() {
+        super();
+    }
+
+    //设置上下文的数据类型
+    static childContextTypes = {
+        store: PropTypes.object
+    };
+
+    //设置上下文的数据
+    getChildContext = () => {
+        return {
+            store: this.props.store
+        }
+    };
+
+    render() {
+        //由于provider是双闭合标签，则props里面有一个children的属性，则可以拿过来重新的渲染
+        return this.props.children;
+    }
+}
+
+```
+
+## react-redux原理之connect
+```
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+
+class Provider extends Component {
+    constructor() {
+        super();
+    }
+
+    //设置上下文的数据类型
+    static childContextTypes = {
+        store: PropTypes.object
+    };
+
+    //设置上下文的数据
+    getChildContext = () => {
+        return {
+            store: this.props.store
+        }
+    };
+
+    render() {
+        //由于provider是双闭合标签，则props里面有一个children的属性，则可以拿过来重新的渲染
+        return this.props.children;
+    }
+}
+
+let connect = (mapStateToProps, mapDispatchToProps) => {
+    return function (Component) {
+        return class Proxy extends React.Component {
+            static contextTypes = {
+                store: PropTypes.object
+            }
+
+            //在构造方法里面做一些处理将mapStateToProps处理过的数据返回给当前的组件，并一同当作属性传给Component组件
+            constructor(props, context) {
+                let state = this.context.store.getState();
+                this.state = mapStateToProps(state);
+            }
+            
+            //自动处理subscribe，在组件里面不需要再次执行
+            componentDidMount = () => {
+                this.context.store.subscribe(() => {
+                    let state = this.context.store.getState();
+                    this.setState = mapStateToProps(state);
+                })
+            }
+            
+            //渲染成新的组件
+            render() {
+                return <Component {...state,...} {...mapDispatchToProps(this.context.store.dispatch)}/>
+            }
+        }
+    }
+};
+
+export {
+    Provider,
+    connect
+}
+
+/*
+ *  connect(mapStateToProps,mapDispatchToProps)(VoteComponent)
+ *
+ */
 ```
 
 
