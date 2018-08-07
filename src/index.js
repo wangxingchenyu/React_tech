@@ -9,6 +9,10 @@ import {Provider} from 'react-redux'
 import store from './store'
 import Vote from "./components/Vote/Vote";
 
+/**
+ * todo案例
+ *
+ */
 ReactDOM.render(<Provider store={store}>
     <div className='container' style={{marginTop: "10px"}}>
         <div className='card'>
