@@ -11,7 +11,7 @@ import Vote from "./components/Vote/Vote";
 
 /**
  * todo案例
- *
+ *aaa
  */
 ReactDOM.render(<Provider store={store}>
     <div className='container' style={{marginTop: "10px"}}>
