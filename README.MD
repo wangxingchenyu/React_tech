@@ -321,6 +321,7 @@ getChildContext() {
 import React, {Component} from 'react'
 import ReactDOM, {render} from 'react-dom'
 import Dialog from "./components/Dialog";
+<<<<<<< HEAD
 
 class Parent extends Component {
     constructor(props) {
@@ -402,6 +403,89 @@ ReactDOM.render(<div><Parent/></div>, root);
    }
  }
 
+=======
+
+class Parent extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {display: "none"}
+    }
+
+    render() {
+        return (
+            <div>
+                <button onClick={this.tan}>弹出</button>
+                <Dialog display={this.state.display} hide={this.hide}/>
+            </div>
+        )
+    }
+
+    tan = () => {
+        this.setState({display: "block"});
+    }
+
+    hide = () => {
+        this.setState({display: "none"});
+    }
+}
+
+
+ReactDOM.render(<div><Parent/></div>, root);
+
+
+/*
+  两个组件间的数据传递，通过props来修改
+
+  第一步将父组件的state 传给子组件的一个属性，
+
+  第二步：子组件接收这个属性来更改样式是否显示还是隐藏
+
+  第三步： 在子组件里面，产生一个事件，而这个事件指向是这个组件的属性，而这个组件的属性指向是父组件方法，
+
+  第四步：父组件这个方法通过改变状态来更改子组件里面的diaplay里面的值 ，从而达到父传子，子拿父的方法来更改状态
+  
+ */
+ 
+ > 子组件 
+ 
+ import React,{Component}  from 'react'
+ import '../dialog.less'
+ export default class Dialog extends Component{
+    constructor(){
+        super();
+    }
+    render(){
+        return (
+            <div className='mask' style={{display:this.props.display}}>
+                <div className='content'>
+                    <button  onClick={this.props.hide}> &times; </button>
+                </div>
+            </div>
+        )
+    }
+ }
+ 
+ > 样式
+ .mask{
+   width: 100%;
+   height: 100%;
+   position: fixed;
+   left: 0;
+   top: 0;
+   background: #000;
+   opacity: .4;
+   .content{
+     position: fixed;
+     width: 300px;
+     left: 50%;
+     top: 50%;
+     height: 300px;
+     background: #fff;
+     transform: translate(-50%,-50%);
+   }
+ }
+
+>>>>>>> c80d40b1c05527262ea4571adef70e048ab3f339
 ```
 
 ## 传递的两种试
@@ -1163,12 +1247,15 @@ export {
  */
 ```
 
+<<<<<<< HEAD
 ## Todo案例
 
 
 
 
 
+=======
+>>>>>>> c80d40b1c05527262ea4571adef70e048ab3f339
 
 
 
