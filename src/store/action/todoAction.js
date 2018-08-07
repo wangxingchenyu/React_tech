@@ -12,11 +12,23 @@ let todoAction = {
             payload  //接收diapatch发送过来的内容
         }
     },
-    select_complete(newpay){
+    select_complete(id){
        return {
-           type:TYPES.SELECTED,
-           newpay
-       }
+            type:TYPES.SELECTED,
+            id
+        }
+    },
+    delete_item(delete_id){
+        return {
+            type:TYPES.DELETE_ITEM,
+            delete_id
+        }
+    },
+    change_search(search_flag){
+        return {
+            type:TYPES.CHANGE_SEARCH,
+            search_flag
+        }
     }
 
 };

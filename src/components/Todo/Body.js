@@ -8,16 +8,27 @@ class Body extends Component {
     }
 
     render() {
-        let {id, content, flag} = this.props.data;
+        let findDate = [];
+        console.log(this.props.data, this.props.flag);
+        if (this.props.flag === 'all'){
+            findDate = this.props.data;
+        }  else{
+            findDate = this.props.data.filter(item=>item.flag === this.props.flag)
+        }
         return (
             <div className='card-body'>
                 <ul className='list-group'>
-                    {this.props.data.map((item, index) => {
+                    {findDate.map((item, index) => {
+                        let zhuangtai = item.flag === "completed" ? true : false;
                         return <li className='list-group-item' key={index}>
-                            <input type="checkbox" name="todo" id="" checked={item.flag === "completed" ? true : false}/>
+                            <input type="checkbox" name="todo" id="" onChange={() => {
+                                this.props.select_complete(item.id);
+                            }} checked={zhuangtai}/>
                             &nbsp;&nbsp;
                             <span className={item.flag === "completed" ? 'complete' : ""}>{item.content}</span>
-                            <button className='btn-danger float-right'>&times;</button>
+                            <button className='btn-danger float-right' onClick={() => {
+                                this.props.delete_item(item.id);
+                            }}>&times;</button>
                         </li>
                     })}
                 </ul>

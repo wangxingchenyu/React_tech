@@ -17,4 +17,5 @@ export const PERSONAL = 'PERSONAL'
 
 export const ADD_TASK = 'ADD_TASK'
 export const SELECTED = 'SELECTED'
-
+export const DELETE_ITEM = 'DELETE_ITEM'
+export const CHANGE_SEARCH = "CHANGE_SEARCH"

@@ -8,11 +8,11 @@ class Header extends Component {
     }
 
     render() {
+        let len = this.props.data.filter(item => item.flag ==="uncompleted").length;
         console.log('执行了render');
-        console.log(this.props);
         return <div className='card-header'>
             <div>[任务列表] 所有任务: <span className='text-dark h3'>{this.props.data.length}</span> &nbsp;&nbsp;未完成:<span
-                className='text-danger h3'>0</span></div>
+                className='text-danger h3'>{len}</span></div>
             <input type="text" className='form-control' onKeyUp={this.add_task}/>
         </div>
     }
