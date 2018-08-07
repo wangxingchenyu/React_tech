@@ -1,6 +1,10 @@
-let arr=[1,2,3];
-console.log(arr.includes(2));
+let arr = [
+    {id:1,content:"添加crm"},
+    {id:2,content:"添加crm"},
+    {id:3,content:"添加crm"},
+    {id:4,content:"添加crm"},
+]
 
-let obj ={
+console.log(arr.pop())
+console.log(arr)
 
-}

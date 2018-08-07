@@ -11,3 +11,10 @@ export const VOTE_INIT = "VOTE_INIT";
 
 export const PERSONAL = 'PERSONAL'
 
+/**
+ * 任务队列操作
+ */
+
+export const ADD_TASK = 'ADD_TASK'
+export const SELECTED = 'SELECTED'
+

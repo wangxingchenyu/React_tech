@@ -21,13 +21,13 @@ class Body extends Component {
 
     render() {
         let {n, m} = this.props, rate = n / (n + m) * 100;
-        console.log(this.props,'渲染里面');
+        console.log(this.props, '渲染里面');
         isNaN(rate) ? rate = 0 : null;
         return (
             <div className='card-body'>
                 <div className='alert alert-success'>支持:{n}</div>
                 <div className='alert alert-danger'>反对:{m}</div>
-                <div className='alert alert-dark'>支持率:{rate.toFixed(2)+"%"}</div>
+                <div className='alert alert-dark'>支持率:{rate.toFixed(2) + "%"}</div>
             </div>
         )
     }
@@ -48,5 +48,6 @@ let mapDispatchToProps = (dispatch) => {
         }
     }
 }
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(Body)
