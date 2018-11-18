@@ -6,27 +6,33 @@
 import * as TYPES from '../action-types'
 
 let todoAction = {
-    addTask(payload) {
-        return {
-            type: TYPES.ADD_TASK,
-            payload  //接收diapatch发送过来的内容
-        }
+    addTask(payload) { //当使用redux-thunk的时候是这样操作的，直接给Dispatch分发到action中，你自行处理
+        //其本质是发dispatch分发两次，一次是发送结果为undefined的内容，
+        // 第二次发送的是异步的数据的内容
+        return dispatch => {
+            setTimeout(() => {
+                dispatch({
+                    type: TYPES.ADD_TASK,
+                    payload  //接收diapatch发送过来的内容
+                })
+            }, 3000);
+        };
     },
-    select_complete(id){
-       return {
-            type:TYPES.SELECTED,
+    select_complete(id) {
+        return {
+            type: TYPES.SELECTED,
             id
         }
     },
-    delete_item(delete_id){
+    delete_item(delete_id) {
         return {
-            type:TYPES.DELETE_ITEM,
+            type: TYPES.DELETE_ITEM,
             delete_id
         }
     },
-    change_search(search_flag){
+    change_search(search_flag) {
         return {
-            type:TYPES.CHANGE_SEARCH,
+            type: TYPES.CHANGE_SEARCH,
             search_flag
         }
     }

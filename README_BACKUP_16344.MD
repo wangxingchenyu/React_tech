@@ -429,6 +429,7 @@ class Parent extends Component {
     }
 }
 
+
 ReactDOM.render(<div><Parent/></div>, root);
 
 
@@ -738,7 +739,6 @@ let store = createStore(reducer);
             this.setState({refresh: !this.state.refresh});  //this.setState()会自动触发render
         })
     }
-    
 ```
 
 ### 执行dispatch
@@ -767,17 +767,19 @@ let store = createStore(reducer);
 ## Redux工程化结构 
 - 通常情况下，会在 src 目录时面建立 一个 store 目录
 - store 里面有actions reducer Nav.jsction-types.js
-- Nav.js回一个store
+- Navs 返回一个store
 ```
 store
 |- action
 |  | -vote.js
 |  | -personal.js
-|  | - Nav.js- reducer
+|  | - Navs
+|- reducer
 |  | -vote.js
 |  | -personal.js
 |  | - Navs
-|- Nav.js- action-type.js
+|- Navs
+|- action-type.js
 ```
 > Nav.js``
 import {createStore} from "redux"
@@ -838,7 +840,8 @@ export default function personal(state = {
 }
 
 ```
-> Reducer Nav.js``
+> Reducer Navs
+```
 import {combineReducers} from "redux"  合并两个reducer
 import personal from "./personal"
 import vote from "./Vote"
@@ -1208,7 +1211,7 @@ let connect = (mapStateToProps, mapDispatchToProps) => {
             static contextTypes = {
                 store: PropTypes.object
             }
-               
+
             //在构造方法里面做一些处理将mapStateToProps处理过的数据返回给当前的组件，并一同当作属性传给Component组件
             constructor(props, context) {
                 let state = this.context.store.getState();
@@ -1240,115 +1243,17 @@ export {
  *  connect(mapStateToProps,mapDispatchToProps)(VoteComponent)
  *
  */
-```angular2html
-
-```
- 
-```
-## React路由系统  react-router-dom
-> HashRouter,BrowerRouter
-> HashRouter 里面只能包含一个子元素，所以通常是用div包裹着
-> Switch 用来着，只要走一个就不再继续走下面一个
-> 里面放一个个Route
-> Route 有属性to(可以是一个字符串，也可以是一个对象) exect strict component 
-> 如果是对象的话，则格式为{pathname: ,search:'?name=alex'}这样的形式
-
-## 工程化结构
-
-public
-static
-router
-component
-store
-    - reducer
-    - action
-    - action-types
-   
-1)我已经做了一个严谨的匹配
-
-## antd design的使用
-
--> 安装  yarn add antd
--> 导入ANTD 需要哪个组件，导入哪个组件
--> 导入ANTD的样式 自己建立一个自定义的css文件，在此用@import导入
-->  antd提供的组件都是英文的，需要中文显示，需要导入汉化包
-
-```
-```angular2html
-
-webpack + react 手动实现环境安装 
-
-功能：编译，打包
-
-因为配置相对复红，所以出现了，脚本架，省去了人们配置的时间与精力(信心)
-(代码搬运工，只是用别人写好的东西，来实现自己的业务需求)
-
-方装的方式: npm yarn (cnpm)
-
-第一步：初始化package.json 定义了安装内容，script->bin目录里面的脚本
-
-第二步：入口文件(index.js)
-
-第三步：出口文件 (上线打包编译后存放的位置，通过是在dist目录)
-
-第四步：有html入口文件
-
-第五步：有webpack  webpack_config.js
-
-第六步：安装各种包
-    - webpack 
-    - webpack-dev-server (启动开发的临时socket 打包编译)
-    - babel-core babel-loader babel-preset-es2015 babel-preset-stage-0
-    - less less-loader css css-loader style-loader 
-    - url-loader file-loader
-    - webpack-html-plugin
-
-
-yarn add webpack  webpack-dev-server babel-core babel-loader babel-preset-es2015 babel-preset-stage-0 babel-preset-react less less-loader css css-loader style-loader url-loader file-loader html-webpack-plugin --dev 
-
-yarn add react react-dom 
-
-别外加配置文件:
-webpack_config.js
-module.exporte={
-    entry:"./src/indexjs",
-    output:{
-        filename:"build.js",
-        path:require('path').resolve("./dist")
-    },
-    module:{
-    rules:[
-         
-    ]
-    }
-}
-
-
-# 加html
-index 加根节点 <div id="root"></div>
-
-# 加src目录 在里面创建index.js
-
-添加.babelrc
-
-
-
 ```
 
+<<<<<<< HEAD
+## Todo案例
 
 
 
 
 
-
-
-        
-
-
-
-
-
-
+=======
+>>>>>>> c80d40b1c05527262ea4571adef70e048ab3f339
 
 
 

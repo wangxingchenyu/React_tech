@@ -47,7 +47,7 @@ let connect = (mapStateToProps, mapDispatchToProps) => {
 
             //渲染成新的组件
             render() {
-                return <Component {...state,...} {...mapDispatchToProps(this.context.store.dispatch)}/>
+                return <Component {...state} {...mapDispatchToProps(this.context.store.dispatch)}/>
             }
         }
     }

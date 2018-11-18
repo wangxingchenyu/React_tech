@@ -1,13 +1,13 @@
 export function createElement(type, props, ...childrens) {
     //如果childrens是一个内容则取第一个，如果没有，则取空，如果有多个，则取多个
     let obj = {
-        type,
+        type: typeof type === 'function' ? type() : type,//判断如果type是一个函数的话，则先执行再进行判断 ，如果不是的等方面，则直接返回
         props: {
             ...props,
             children: childrens.length <= 1 ? (childrens[0] || "") : childrens
         },
-        key : null,
-        ref :null
+        key: null,
+        ref: null
     };
     //修复之前处理的key ,ref bug内容
     'key' in obj.props ? (obj.key = obj.props.key, obj.props.key = undefined) : null;
@@ -15,7 +15,21 @@ export function createElement(type, props, ...childrens) {
     return obj;
 }
 
-
+/***
+ *  组件的特点:
+ *
+ *    - 可维护性强
+ *    -  复用性强
+ *
+ *    - 如果type 是一个函数，在组件里面，已经引入了 import  Recat,{Component} from react
+ *
+ *    这个时候{type:div ,props:{...children},key,ref}
+ *    只需要对于type 进行判断，如果是一个函数，则直接反选，将返回的结果赋于type，无需再更改Render里面的内容
+ *
+ * @param obj
+ * @param container
+ * @param callback
+ */
 export function render(obj, container, callback) {
     let {type, props} = obj;
     //用type来创建一个元素
@@ -74,7 +88,6 @@ export function render(obj, container, callback) {
 
 
 第二个，写自己的render
-
 
  */
 
